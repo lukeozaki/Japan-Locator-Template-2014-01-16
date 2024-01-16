@@ -27,7 +27,8 @@ const SearchBox = (props: SearchBoxProps) => {
       <div className="mb-2 text-brand-gray-400">{subTitle}</div>
       <div className="flex items-center">
         <div className="relative w-full h-9">
-          <FilterSearch
+          <SearchBar />
+          {/* <FilterSearch
             customCssClasses={{
               filterSearchContainer: "absolute w-full",
             }}
@@ -61,7 +62,7 @@ const SearchBox = (props: SearchBoxProps) => {
               searchActions.resetFacets();
               executeSearch(searchActions);
             }}
-          />
+          /> */}
         </div>
         <GeolocateButton className="ml-4" />
       </div>
