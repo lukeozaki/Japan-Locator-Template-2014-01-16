@@ -47,7 +47,8 @@ const DirectorySearchBarInternal = (props: DirectorySearchBarProps) => {
   return (
     <div className="flex items-center justify-center">
       <div className="relative w-[350px!important] justify-center h-[54px]">
-        <FilterSearch
+        <SearchBar />
+        {/* <FilterSearch
           customCssClasses={{
             filterSearchContainer: "absolute w-full mb-0",
             inputElement: "p-4 text-sm h-auto",
@@ -69,7 +70,7 @@ const DirectorySearchBarInternal = (props: DirectorySearchBarProps) => {
               window.location.href = `${searcherPath}?${searchParams.toString()}`;
             }
           }}
-        />
+        /> */}
       </div>
       <GeolocateButton
         className="ml-4"
