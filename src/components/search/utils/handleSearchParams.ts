@@ -234,6 +234,39 @@ export function useLoadInitialSearchParams(
   }, [searchActions, searchParams, setSearchParams, paramsLoaded, callback]);
 }
 
+// On change in search state, encode the state into URLSearchParams and push to window.history if there is a delta.
+export function useSyncSearchParamsWithState(initialParamsLoaded: boolean) {
+  const searchActions = useSearchActions();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    // Don't register listeners on page load until all of the initial params are loaded.
+    if (!initialParamsLoaded) return;
+
+    const encodedStatic = encodeStaticFilters(
+      searchActions.state.filters?.static || []
+    );
+    const encodedFacets = encodeFacetFilters(
+      searchActions.state.filters?.facets || []
+    );
+    let newSearchString = "";
+
+    if (encodedStatic) {
+      newSearchString += encodedStatic.toString();
+
+      // Add facets if static filter exists.
+      if (encodedFacets) {
+        newSearchString += `&${encodedFacets.toString()}`;
+      }
+    }
+
+    // Avoid pushing an identical URLSearchParams string.
+    if (newSearchString !== searchParams.toString()) {
+      setSearchParams(newSearchString);
+    }
+  }, [searchActions.state.filters, initialParamsLoaded]);
+}
+
 // Create URLSearchParams from the current static filter state.
 export function encodeStaticFilters(
   filters: SelectableStaticFilter[]
