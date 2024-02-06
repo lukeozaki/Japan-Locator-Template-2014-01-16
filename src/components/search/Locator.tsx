@@ -1,12 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
-import { useSearchActions, useSearchState, Matcher, SelectableStaticFilter } from "@yext/search-headless-react";
-import { Map } from "@yext/pages/components";
-import { GoogleMaps } from "@yext/components-tsx-maps";
-import { Coordinate, GeoBounds } from '@yext/components-tsx-geo';
+import { useSearchActions, useSearchState } from "@yext/search-headless-react";
+import { Map, GoogleMaps } from "@yext/pages-components";
 import { useBreakpoint } from "src/common/useBreakpoints";
 import {
-  useHandleSearchParams,
   useLoadInitialSearchParams,
+  useSyncSearchParamsWithState,
+  useSyncStateWithSearchParams,
 } from "src/components/search/utils/handleSearchParams";
 import { useGetSearchResults } from "src/components/search/utils/useGetSearchResults";
 import { LocatorProvider } from "./utils/useLocator";
@@ -19,7 +18,7 @@ import ResultInfo from "src/components/search/ResultInfo";
 import ResultList from "src/components/search/ResultList";
 import CustomMarker from "src/components/search/CustomMarker";
 import LoadingSpinner from "src/components/common/LoadingSpinner";
-import { GEOLOCATE_RADIUS, PS_API_KEY } from "src/config";
+import { getMapKey } from "src/common/getMapKey";
 
 type LocatorProps = {
   // Will display results up to the verticalLimit (default 20, change with searchActions.setVerticalLimit(num))
@@ -38,6 +37,7 @@ const Locator = (props: LocatorProps) => {
     subTitle,
     title,
   } = props;
+  const mapKey = getMapKey();
   const [selectedEntityId, setSelectedEntityId] = useState("");
   const [focusedEntityId, setFocusedEntityId] = useState("");
   const [hoveredEntityId, setHoveredEntityId] = useState("");
@@ -52,18 +52,12 @@ const Locator = (props: LocatorProps) => {
     [setInitialParamsLoaded]
   );
 
-  const [showSearchAreaButton, setShowSearchAreaButton] = useState(false);
-  const [mapCenter, setMapCenter] = useState<Coordinate>();
-  const [mapBounds, setMapBounds] = useState<GeoBounds>();
-
-
-  // const queryId = useSearchState(state => state.query.queryId);
-  // const [ areaSearchStatus, setAreaSearchStatus ] = useState<AreaSearchStatus>({ inProgress: false });
-
   // Load static and facet filters on page load.
   useLoadInitialSearchParams(initialParamsLoaded, initialParamsLoadedCallback);
   // Update the search params whenever the search state filters property changes.
-  useHandleSearchParams(initialParamsLoaded);
+  useSyncSearchParamsWithState(initialParamsLoaded);
+  // Update the state only on history change.
+  useSyncStateWithSearchParams();
 
   // Unset any selected, hovered, or focused markers on new search
   useEffect(() => {
@@ -79,35 +73,6 @@ const Locator = (props: LocatorProps) => {
       setAllLocationsLoaded(true);
     }
   );
-
-  const handleDrag = (previousBounds: GeoBounds, currentBounds: GeoBounds) => {
-    setMapCenter(currentBounds.getCenter());
-    setMapBounds(currentBounds);
-    setShowSearchAreaButton(true);
-  };
-  const handleSearchAreaClick = () => {
-    if (mapCenter && mapBounds) {
-      const { latitude, longitude } = mapCenter;
-      const searchRadius = mapBounds.ne.distanceTo(mapCenter) * 1609;
-      const locationFilter: SelectableStaticFilter = {
-        selected: true,
-        displayName: "Current map area",
-        filter: {
-          kind: "fieldValue",
-          fieldId: "builtin.location",
-          value: {
-            lat: latitude,
-            lng: longitude,
-            radius: searchRadius,
-          },
-          matcher: Matcher.Near,
-        },
-      };
-      searchActions.setStaticFilters([locationFilter]);
-      searchActions.executeVerticalQuery();
-      setShowSearchAreaButton(false);
-    }
-  };
 
   return (
     <LocatorProvider
@@ -142,12 +107,7 @@ const Locator = (props: LocatorProps) => {
               bounds={results.map((data) => data.rawData.yextDisplayCoordinate)}
               padding={{ top: 100, bottom: 200, left: 50, right: 50 }}
               className="h-full"
-              clientKey="gme-yextinc"
-              // defaultCenter={{ latitude: 35.67980, longitude: 139.77100 }} //Japan
-              // defaultZoom={5}
-              panHandler={handleDrag}
-              // panStartHandler={panStartHandler}
-              // apiKey={MAPS_API_KEY}
+              {...mapKey}
             >
               {results.map((data, index) => (
                 <CustomMarker
@@ -158,16 +118,6 @@ const Locator = (props: LocatorProps) => {
                 />
               ))}
             </Map>
-            {showSearchAreaButton && (
-              <div className="absolute bottom-10 left-0 right-0 flex justify-center">
-                <button
-                  onClick={handleSearchAreaClick}
-                  className="rounded-2xl border bg-white py-2 px-4 shadow-xl"
-                >
-                  <p>Search This Area</p>
-                </button>
-              </div>
-            )}
           </div>
         )}
       </div>
