@@ -23,7 +23,7 @@ import {
   locationFilterToType,
   locationTypeToFilter,
 } from "src/components/search/utils/helpers";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 
 // URLSearchParams keys used for storing and loading search state.
 export const FILTERS_CONFIG = [
