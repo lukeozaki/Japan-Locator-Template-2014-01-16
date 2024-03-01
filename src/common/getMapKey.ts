@@ -1,6 +1,6 @@
 import { MAPS_API_KEY } from "src/config";
 
-const isLocalDev = import.meta.env.DEV;
+const isLocalDev = true;
 
 export const getMapKey = () => {
   // if (MAPS_API_KEY === "<REPLACE-ME>") {
