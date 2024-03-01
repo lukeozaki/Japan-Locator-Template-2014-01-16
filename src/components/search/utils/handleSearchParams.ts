@@ -55,7 +55,7 @@ export function useLoadInitialSearchParams(
       }
     }
     loadInitialParams();
-  }, [searchActions, searchParams, setSearchParams, paramsLoaded, callback]);
+  } [searchActions, searchParams, setSearchParams, paramsLoaded, callback]);
 }
 
 // On change in search state, encode the state into URLSearchParams and push to window.history if there is a delta.
