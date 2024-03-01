@@ -18,7 +18,7 @@ export function useLoadInitialSearchParams(
 
   useEffect(() => {
     // Don't run again after params are loaded.
-    if (paramsLoaded) return;
+    // if (paramsLoaded) return;
 
     async function loadInitialParams() {
       const staticFilter = await decodeStaticFilters(
@@ -26,16 +26,6 @@ export function useLoadInitialSearchParams(
         searchActions
       );
       const facetFilters = decodeFacetFilters(searchParams);
-
-    const loadUrlParams = async () => {
-      // Get values from URL.
-      let query = searchParams.get("q");
-      const prettyQuery = searchParams.get("qp");
-      const locationType = searchParams.get("location_type");
-      const lat = searchParams.get("lat");
-      const lng = searchParams.get("lng");
-      const radius = searchParams.get("r");
-      const facets = searchParams.get("facets");
 
       if (staticFilter) {
         searchActions.setStaticFilters([staticFilter]);
@@ -55,7 +45,7 @@ export function useLoadInitialSearchParams(
       }
     }
     loadInitialParams();
-  } [searchActions, searchParams, setSearchParams, paramsLoaded, callback]);
+  }, [searchActions, searchParams, setSearchParams, paramsLoaded, callback]);
 }
 
 // On change in search state, encode the state into URLSearchParams and push to window.history if there is a delta.
