@@ -19,10 +19,7 @@ import ResultList from "src/components/search/ResultList";
 import CustomMarker from "src/components/search/CustomMarker";
 import LoadingSpinner from "src/components/common/LoadingSpinner";
 import { getMapKey } from "src/common/getMapKey";
-<<<<<<< HEAD
 import { useCurrentGeoLocation } from "src/common/useCurrentGeoLocation";
-import { useSearchParams } from "react-router-dom";
-=======
 import { useSearchParams } from "react-router-dom";
 
 type LocatorProps = {
