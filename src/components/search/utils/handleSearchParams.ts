@@ -27,6 +27,16 @@ export function useLoadInitialSearchParams(
       );
       const facetFilters = decodeFacetFilters(searchParams);
 
+    const loadUrlParams = async () => {
+      // Get values from URL.
+      let query = searchParams.get("q");
+      const prettyQuery = searchParams.get("qp");
+      const locationType = searchParams.get("location_type");
+      const lat = searchParams.get("lat");
+      const lng = searchParams.get("lng");
+      const radius = searchParams.get("r");
+      const facets = searchParams.get("facets");
+
       if (staticFilter) {
         searchActions.setStaticFilters([staticFilter]);
         searchActions.setFacets(facetFilters);

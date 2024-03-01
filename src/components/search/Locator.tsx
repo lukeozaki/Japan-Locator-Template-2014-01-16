@@ -19,6 +19,7 @@ import ResultList from "src/components/search/ResultList";
 import CustomMarker from "src/components/search/CustomMarker";
 import LoadingSpinner from "src/components/common/LoadingSpinner";
 import { getMapKey } from "src/common/getMapKey";
+import { useSearchParams } from "react-router-dom";
 
 type LocatorProps = {
   // Will display results up to the verticalLimit (default 20, change with searchActions.setVerticalLimit(num))
@@ -44,7 +45,7 @@ const Locator = (props: LocatorProps) => {
 
   const searchActions = useSearchActions();
   const isLoading = useSearchState((state) => state.searchStatus.isLoading);
-  const isDesktopBreakpoint = useBreakpoint("sm");
+  const isDesktopBreakpoint = useBreakpoint("md");
   const [allLocationsLoaded, setAllLocationsLoaded] = useState(false);
   const [initialParamsLoaded, setInitialParamsLoaded] = useState(false);
   const initialParamsLoadedCallback = useCallback(
@@ -52,12 +53,14 @@ const Locator = (props: LocatorProps) => {
     [setInitialParamsLoaded]
   );
 
+  const [searchParams] = useSearchParams();
+
   // Load static and facet filters on page load.
   useLoadInitialSearchParams(initialParamsLoaded, initialParamsLoadedCallback);
   // Update the search params whenever the search state filters property changes.
-  useSyncSearchParamsWithState(initialParamsLoaded);
+  // useSyncSearchParamsWithState(initialParamsLoaded);
   // Update the state only on history change.
-  useSyncStateWithSearchParams();
+  // useSyncStateWithSearchParams();
 
   // Unset any selected, hovered, or focused markers on new search
   useEffect(() => {
@@ -73,6 +76,16 @@ const Locator = (props: LocatorProps) => {
       setAllLocationsLoaded(true);
     }
   );
+
+  useEffect(() => {
+    const qp = searchParams.get("q");
+    const lat = searchParams.get("lat");
+    if (lat) return;
+    if (qp) {
+      searchActions.setQuery(q);
+      searchActions.executeVerticalQuery();
+    }
+  }, []);
 
   return (
     <LocatorProvider
