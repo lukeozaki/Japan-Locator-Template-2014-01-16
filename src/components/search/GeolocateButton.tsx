@@ -30,7 +30,7 @@ const GeolocateButton = (props: GeolocateButtonProps) => {
       });
 
       const newFilter: SelectableStaticFilter = {
-        displayName: "My Location",
+        displayName: "現在地",
         selected: true,
         filter: {
           kind: "fieldValue",

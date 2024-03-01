@@ -57,21 +57,21 @@ function getResultsCountText(state: State, resultsCount: number) {
 
   if (searchPlace) {
     if (resultsCount === 0) {
-      return `No locations found near "${searchPlace}".`;
+      return `"${searchPlace}" 周辺の店舗 ${resultsCount}件`;
     }
     if (resultsCount === 1) {
-      return `${resultsCount} location near "${searchPlace}".`;
+      return `"${searchPlace}" 周辺の店舗 ${resultsCount}件`;
     }
-    return `${resultsCount} locations near "${searchPlace}".`;
+    return `"${searchPlace}" 周辺の店舗 ${resultsCount}件`;
   }
 
   if (resultsCount === 0) {
-    return `No locations found.`;
+    return `検索結果は見つかりませんでした`;
   }
   if (resultsCount === 1) {
-    return `${resultsCount} location found.`;
+    return `${resultsCount} 件見つかりました`;
   }
-  return `${resultsCount} locations found.`;
+  return `${resultsCount} 件見つかりました`;
 }
 
 export default ResultSummary;

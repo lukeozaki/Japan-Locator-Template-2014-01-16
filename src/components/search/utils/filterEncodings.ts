@@ -108,9 +108,9 @@ export async function decodeStaticFilters(
     };
   }
 
-  // If the pretty query is "My Location", attempt to geolocate the user and
+  // If the pretty query is "現在地", attempt to geolocate the user and
   // use their position to set a filter with a NearFilterValue value in state.
-  else if (prettyQuery === "My Location") {
+  else if (prettyQuery === "現在地") {
     try {
       const position = await getUserLocation();
 

@@ -1,5 +1,7 @@
-import { FilterSearch, SearchBar, executeSearch } from "@yext/search-ui-react";
-import { useSearchActions } from "@yext/search-headless-react";
+import {
+  useSearchActions,
+} from "@yext/search-headless-react";
+import { SearchBar } from "@yext/search-ui-react";
 import { LOCATOR_STATIC_FILTER_FIELD, LOCATOR_ENTITY_TYPE } from "src/config";
 import GeolocateButton from "src/components/search/GeolocateButton";
 
@@ -18,8 +20,19 @@ type SearchBoxProps = {
 
 const SearchBox = (props: SearchBoxProps) => {
   const { title, subTitle, placeholderText } = props;
-
   const searchActions = useSearchActions();
+
+  const onSearch = () => {
+    if (searchActions.state.filters.static) {
+      const filters = searchActions.state.filters.static.filter((filter) => {
+        return filter.displayName !== "現在地";
+      });
+      searchActions.setStaticFilters(filters);
+    }
+    searchActions.setOffset(0);
+    searchActions.resetFacets();
+    searchActions.executeVerticalQuery();
+  };
 
   return (
     <div className="shadow-brand-shadow p-6">
@@ -27,44 +40,16 @@ const SearchBox = (props: SearchBoxProps) => {
       <div className="mb-2 text-brand-gray-400">{subTitle}</div>
       <div className="flex items-center">
         <div className="relative w-full h-9">
-          <SearchBar />
-          {/* <FilterSearch
+          <SearchBar
+            onSearch={onSearch}
             customCssClasses={{
-              filterSearchContainer: "absolute w-full",
+              inputElement: "w-full",
             }}
-            label=""
-            placeholder={placeholderText}
-            searchFields={searchFields}
-            onSelect={({
-              currentFilter,
-              executeFilterSearch,
-              newDisplayName,
-              newFilter,
-              setCurrentFilter,
-            }) => {
-              // Update static filters.
-              if (currentFilter) {
-                searchActions.setFilterOption({
-                  filter: currentFilter,
-                  selected: false,
-                });
-              }
-              searchActions.setFilterOption({
-                filter: newFilter,
-                displayName: newDisplayName,
-                selected: true,
-              });
-              setCurrentFilter(newFilter);
-              executeFilterSearch(newDisplayName);
-
-              // Execute search on select.
-              searchActions.setOffset(0);
-              searchActions.resetFacets();
-              executeSearch(searchActions);
-            }}
-          /> */}
+          />
         </div>
         <GeolocateButton className="ml-4" />
+      </div>
+      <div className="flex mb-2 md:mb-0">
       </div>
     </div>
   );
