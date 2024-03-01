@@ -14,7 +14,7 @@ const config: ConfigurationProviderContextType = {
 export default config;
 
 // Key for Maps provider.
-export const MAPS_API_KEY = YEXT_PUBLIC_MAPS_API_KEY || "<REPLACE-ME>";
+export const MAPS_API_KEY = YEXT_PUBLIC_MAPS_API_KEY || "<REPLACE-ME>"; //<REPLACE-ME> をGoogle MAPS APIキーに置換してください
 
 // Path for the search page.
 // Exported here since it's required across multiple pages such as the nearby section and directory search bar.

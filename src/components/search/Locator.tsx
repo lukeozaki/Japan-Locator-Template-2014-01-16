@@ -19,6 +19,10 @@ import ResultList from "src/components/search/ResultList";
 import CustomMarker from "src/components/search/CustomMarker";
 import LoadingSpinner from "src/components/common/LoadingSpinner";
 import { getMapKey } from "src/common/getMapKey";
+<<<<<<< HEAD
+import { useCurrentGeoLocation } from "src/common/useCurrentGeoLocation";
+import { useSearchParams } from "react-router-dom";
+=======
 import { useSearchParams } from "react-router-dom";
 
 type LocatorProps = {
@@ -116,10 +120,13 @@ const Locator = (props: LocatorProps) => {
           <div className="Locator-map">
             <Map
               provider={GoogleMaps}
-              providerOptions={{ styles: mapStyles }}
+              providerOptions={{ styles: mapStyles, language: 'ja',
+              region: 'JP',}}
               bounds={results.map((data) => data.rawData.yextDisplayCoordinate)}
               padding={{ top: 100, bottom: 200, left: 50, right: 50 }}
               className="h-full"
+              defaultCenter={{ latitude: 35.67980, longitude: 139.77100 }}
+              defaultZoom="5"
               {...mapKey}
             >
               {results.map((data, index) => (
