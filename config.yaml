@@ -29,6 +29,7 @@ siteStream:
   localization:
     locales:
       - ja
+      - en
     primary: false
   entityId: site-entity
 sitemap:
